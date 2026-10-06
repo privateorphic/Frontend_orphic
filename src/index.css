@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: #F3DCCB;
+  }
+  body {
+    background-color: #FFFAF5;
+    color: #1F1410;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-orange-200 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-orange-300;
+  }
+}
+
+@layer components {
+  /* Sidebar Links */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-150;
+  }
+  .sidebar-link-active {
+    background-color: #EF7D35 !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 2px 6px rgba(239, 125, 53, 0.35);
+    font-weight: 600;
+  }
+  .sidebar-link-inactive {
+    color: #FDE5D3;
+  }
+  .sidebar-link-inactive:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF;
+  }
+
+  /* Cards & Surfaces */
+  .card {
+    background-color: #FFFFFF;
+    border: 1px solid #F3DCCB;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(31, 20, 16, 0.04);
+  }
+  .stat-card {
+    @apply card p-5 flex flex-col gap-1 hover:shadow-md transition-shadow;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+    background-color: #EF7D35;
+  }
+  .btn-primary:hover {
+    background-color: #DC6422;
+  }
+  .btn-primary:active {
+    background-color: #B84E1A;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-amber-950 text-sm font-semibold rounded-xl border transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: #FFFFFF;
+    border-color: #F3DCCB;
+  }
+  .btn-secondary:hover {
+    background-color: #FFF4EC;
+    color: #DC6422;
+    border-color: #FBCBA8;
+  }
+
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+  }
+
+  .btn-success {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-xl hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+  }
+
+  /* Accent Highlight & Badges */
+  .accent-badge {
+    background-color: #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+    font-weight: 600;
+  }
+
+  /* Table Styling */
+  .table-header {
+    @apply text-left text-xs font-semibold uppercase tracking-wider px-4 py-3;
+    color: #78655A;
+    background-color: #FFF4EC;
+    border-bottom: 1px solid #F3DCCB;
+  }
+  .table-cell {
+    @apply px-4 py-3 text-sm;
+    color: #1F1410;
+  }
+  .table-row-hover {
+    @apply transition-colors;
+  }
+  .table-row-hover:hover {
+    background-color: #FFF4EC !important;
+  }
+
+  /* Form Elements */
+  .form-label {
+    @apply block text-sm font-semibold mb-1.5;
+    color: #1F1410;
+  }
+  .form-input {
+    @apply w-full px-3.5 py-2.5 text-sm rounded-xl transition placeholder:text-[#A8917F];
+    background-color: #FFF4EC;
+    border: 1px solid #FBCBA8;
+    color: #1F1410;
+  }
+  .form-input:focus {
+    outline: none;
+    border-color: #EF7D35;
+    box-shadow: 0 0 0 3px rgba(239, 125, 53, 0.25);
+  }
+  .form-select {
+    @apply w-full px-3.5 py-2.5 text-sm rounded-xl transition appearance-none;
+    background-color: #FFF4EC;
+    border: 1px solid #FBCBA8;
+    color: #1F1410;
+  }
+  .form-select:focus {
+    outline: none;
+    border-color: #EF7D35;
+    box-shadow: 0 0 0 3px rgba(239, 125, 53, 0.25);
+  }
+
+  /* Autofill Override */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #FFF4EC inset !important;
+    -webkit-text-fill-color: #1F1410 !important;
+  }
+
+  .page-title {
+    @apply text-2xl font-bold tracking-tight;
+    color: #1F1410;
+  }
+  .page-subtitle {
+    @apply text-sm mt-0.5;
+    color: #78655A;
+  }
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+  }
+}
