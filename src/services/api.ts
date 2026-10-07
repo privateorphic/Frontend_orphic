@@ -30,7 +30,7 @@ api.interceptors.response.use(
       window.location.href = '/login';
     }
     if (!error.response) {
-      error.message = 'Network Error: Backend server is not responding. Please make sure the backend is running at http://localhost:8080.';
+      error.message = `Network Error: Backend server is not responding (${BASE_URL}). If using Render free tier, the backend may take 30-50 seconds to wake up.`;
     } else if (error.response.data) {
       const data = error.response.data as any;
       if (data.errors && typeof data.errors === 'object') {
