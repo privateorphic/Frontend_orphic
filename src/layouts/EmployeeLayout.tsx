@@ -156,7 +156,7 @@ export default function EmployeeLayout() {
                 <div className="w-full h-full rounded bg-[#EF7D35] text-white font-bold text-xs flex items-center justify-center">O</div>
               )}
             </div>
-            <h1 className="font-bold text-[#1F1410] text-base md:text-lg truncate">Orphic Solution — Employee Portal</h1>
+            <h1 className="font-bold text-[#1F1410] text-base md:text-lg truncate">OrphicSolution-Employee Portal</h1>
           </div>
           <div className="relative">
             <button
