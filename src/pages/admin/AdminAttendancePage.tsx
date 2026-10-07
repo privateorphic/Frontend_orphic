@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { DailyAttendanceTable } from '../../components/attendance/DailyAttendanceTable';
-import { EmployeeDailyInspectionModal } from '../../components/attendance/EmployeeDailyInspectionModal';
+import { DailyAttendanceTable } from '../../components/attendance/DailyAttendanceTable.tsx';
+import { EmployeeDailyInspectionModal } from '../../components/attendance/EmployeeDailyInspectionModal.tsx';
 
 export const AdminAttendancePage: React.FC = () => {
   const [inspectingEmpId, setInspectingEmpId] = useState<number | string | null>(null);

@@ -4,9 +4,9 @@ import {
   LayoutDashboard, CheckSquare, FileText, Calendar,
   Bell, User, LogOut, Menu, X, ChevronDown, Clock, ShieldCheck
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { notificationService } from '../services/notificationService';
-import { toast } from '../components/common/Toast';
+import { useAuth } from '../context/AuthContext.tsx';
+import { notificationService } from '../services/notificationService.ts';
+import { toast } from '../components/common/Toast.tsx';
 import logoImg from '../assets/orphicsolution_logo.jpg';
 
 const navItems = [

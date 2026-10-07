@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Clock, ShieldCheck, Activity, RefreshCw } from 'lucide-react';
-import { loginActivityService } from '../../services/loginActivityService';
-import type { LoginActivity } from '../../types';
-import Badge from '../../components/common/Badge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
-import { useAuth } from '../../context/AuthContext';
+import { loginActivityService } from '../../services/loginActivityService.ts';
+import type { LoginActivity } from '../../types/index.ts';
+import Badge from '../../components/common/Badge.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
+import ErrorState from '../../components/common/ErrorState.tsx';
+import EmptyState from '../../components/common/EmptyState.tsx';
+import { useAuth } from '../../context/AuthContext.tsx';
 
 export default function EmployeeLoginHistoryPage() {
   const { user } = useAuth();
@@ -142,5 +142,3 @@ export default function EmployeeLoginHistoryPage() {
     </div>
   );
 }
-
-

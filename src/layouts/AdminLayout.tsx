@@ -4,10 +4,10 @@ import {
   LayoutDashboard, Users, CheckSquare, Clock, Calendar,
   BarChart2, Bell, LogOut, Menu, X, ChevronDown, User
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { notificationService } from '../services/notificationService';
-import { toast } from '../components/common/Toast';
-import UserAvatar from '../components/common/UserAvatar';
+import { useAuth } from '../context/AuthContext.tsx';
+import { notificationService } from '../services/notificationService.ts';
+import { toast } from '../components/common/Toast.tsx';
+import UserAvatar from '../components/common/UserAvatar.tsx';
 import logoImg from '../assets/orphicsolution_logo.jpg';
 
 const navItems = [

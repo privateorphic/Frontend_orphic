@@ -1,46 +1,46 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { ToastContainer } from './components/common/Toast';
-import { AdminRoute, HRRoute, EmployeeRoute } from './routes';
+import { AuthProvider, useAuth } from './context/AuthContext.tsx';
+import { ToastContainer } from './components/common/Toast.tsx';
+import { AdminRoute, HRRoute, EmployeeRoute } from './routes/index.tsx';
 
 // Layouts
-import AuthLayout from './layouts/AuthLayout';
-import AdminLayout from './layouts/AdminLayout';
-import HRLayout from './layouts/HRLayout';
-import EmployeeLayout from './layouts/EmployeeLayout';
+import AuthLayout from './layouts/AuthLayout.tsx';
+import AdminLayout from './layouts/AdminLayout.tsx';
+import HRLayout from './layouts/HRLayout.tsx';
+import EmployeeLayout from './layouts/EmployeeLayout.tsx';
 
 // Auth
-import LoginPage from './pages/auth/LoginPage';
+import LoginPage from './pages/auth/LoginPage.tsx';
 
 // Admin
-import AdminDashboardPage from './pages/admin/Dashboard';
-import AdminEmployeesPage from './pages/admin/Employees';
-import AdminEmployeeDetailPage from './pages/admin/EmployeeDetail';
-import AdminTasksPage from './pages/admin/Tasks';
-import { AdminAttendancePage } from './pages/admin/AdminAttendancePage';
-import AdminLoginActivityPage from './pages/admin/LoginActivity';
-import AdminReportsPage from './pages/admin/Reports';
+import AdminDashboardPage from './pages/admin/Dashboard.tsx';
+import AdminEmployeesPage from './pages/admin/Employees.tsx';
+import AdminEmployeeDetailPage from './pages/admin/EmployeeDetail.tsx';
+import AdminTasksPage from './pages/admin/Tasks.tsx';
+import { AdminAttendancePage } from './pages/admin/AdminAttendancePage.tsx';
+import AdminLoginActivityPage from './pages/admin/LoginActivity.tsx';
+import AdminReportsPage from './pages/admin/Reports.tsx';
 
 // HR
-import HrDashboardPage from './pages/hr/Dashboard';
-import HrEmployeesPage from './pages/hr/Employees';
-import HrCreateEmployeePage from './pages/hr/CreateEmployee';
-import { HrAttendancePage } from './pages/hr/HrAttendancePage';
-import HrLeavesPage from './pages/hr/Leaves';
+import HrDashboardPage from './pages/hr/Dashboard.tsx';
+import HrEmployeesPage from './pages/hr/Employees.tsx';
+import HrCreateEmployeePage from './pages/hr/CreateEmployee.tsx';
+import { HrAttendancePage } from './pages/hr/HrAttendancePage.tsx';
+import HrLeavesPage from './pages/hr/Leaves.tsx';
 
 // Employee
-import EmployeeDashboardPage from './pages/employee/Dashboard';
-import EmployeeTasksPage from './pages/employee/Tasks';
-import EmployeeTaskDetailPage from './pages/employee/TaskDetail';
-import { EmployeeAttendancePage } from './pages/employee/EmployeeAttendancePage';
-import EmployeeDailyWorkPage from './pages/employee/DailyWork';
-import EmployeeWorkHistoryPage from './pages/employee/WorkHistory';
-import EmployeeLeavesPage from './pages/employee/Leaves';
-import EmployeeLoginHistoryPage from './pages/employee/LoginHistory';
-import EmployeeProfilePage from './pages/employee/Profile';
+import EmployeeDashboardPage from './pages/employee/Dashboard.tsx';
+import EmployeeTasksPage from './pages/employee/Tasks.tsx';
+import EmployeeTaskDetailPage from './pages/employee/TaskDetail.tsx';
+import { EmployeeAttendancePage } from './pages/employee/EmployeeAttendancePage.tsx';
+import EmployeeDailyWorkPage from './pages/employee/DailyWork.tsx';
+import EmployeeWorkHistoryPage from './pages/employee/WorkHistory.tsx';
+import EmployeeLeavesPage from './pages/employee/Leaves.tsx';
+import EmployeeLoginHistoryPage from './pages/employee/LoginHistory.tsx';
+import EmployeeProfilePage from './pages/employee/Profile.tsx';
 
 // Shared
-import NotificationsPage from './pages/shared/NotificationsPage';
+import NotificationsPage from './pages/shared/NotificationsPage.tsx';
 
 function RootRedirect() {
   const { user, isAuthenticated, loading } = useAuth();

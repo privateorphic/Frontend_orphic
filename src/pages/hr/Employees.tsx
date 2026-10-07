@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, Eye, UserCheck } from 'lucide-react';
-import { employeeService } from '../../services/employeeService';
-import type { Employee } from '../../types';
-import Badge from '../../components/common/Badge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
-import UserAvatar from '../../components/common/UserAvatar';
-import Pagination from '../../components/common/Pagination';
+import { Search, Plus, Eye } from 'lucide-react';
+import { employeeService } from '../../services/employeeService.ts';
+import type { Employee } from '../../types/index.ts';
+import Badge from '../../components/common/Badge.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
+import ErrorState from '../../components/common/ErrorState.tsx';
+import EmptyState from '../../components/common/EmptyState.tsx';
+import UserAvatar from '../../components/common/UserAvatar.tsx';
+import Pagination from '../../components/common/Pagination.tsx';
 
 const PAGE_SIZE = 10;
 

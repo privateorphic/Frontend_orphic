@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { AuthUser } from '../types';
-import { authService } from '../services/authService';
+import type { AuthUser } from '../types/index.ts';
+import { authService } from '../services/authService.ts';
 
 interface LocationOptions {
   isOfficeLocation?: boolean;

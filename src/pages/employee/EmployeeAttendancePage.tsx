@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Calendar, ShieldCheck, Clock, CheckCircle2, AlertCircle, MapPin } from 'lucide-react';
-import type { DailyAttendanceSummary, EmployeeDailyActivity } from '../../types';
-import { attendanceService } from '../../services/attendanceService';
-import { MorningCheckInCard } from '../../components/attendance/MorningCheckInCard';
-import { EveningCheckoutCard } from '../../components/attendance/EveningCheckoutCard';
-import { TaskSnapshotComparison } from '../../components/attendance/TaskSnapshotComparison';
-import { TaskChangeTimeline } from '../../components/attendance/TaskChangeTimeline';
-import { useAuth } from '../../context/AuthContext';
-import { useToast } from '../../components/common/Toast';
+import { RefreshCw, Calendar, ShieldCheck, Clock, CheckCircle2, MapPin } from 'lucide-react';
+import type { DailyAttendanceSummary, EmployeeDailyActivity } from '../../types/index.ts';
+import { attendanceService } from '../../services/attendanceService.ts';
+import { MorningCheckInCard } from '../../components/attendance/MorningCheckInCard.tsx';
+import { EveningCheckoutCard } from '../../components/attendance/EveningCheckoutCard.tsx';
+import { TaskSnapshotComparison } from '../../components/attendance/TaskSnapshotComparison.tsx';
+import { TaskChangeTimeline } from '../../components/attendance/TaskChangeTimeline.tsx';
+import { useAuth } from '../../context/AuthContext.tsx';
+import { useToast } from '../../components/common/Toast.tsx';
 
 export const EmployeeAttendancePage: React.FC = () => {
   const { user } = useAuth();
@@ -159,4 +159,3 @@ export const EmployeeAttendancePage: React.FC = () => {
     </div>
   );
 };
-
