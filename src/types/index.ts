@@ -395,7 +395,13 @@ export interface DailyAttendanceSummary {
   attendanceDate: string;
   status: AttendanceStatus;
   morningCheckIn?: string;
+  morningLatitude?: number;
+  morningLongitude?: number;
+  morningDistanceFromOffice?: number;
   eveningCheckOut?: string;
+  eveningLatitude?: number;
+  eveningLongitude?: number;
+  eveningDistanceFromOffice?: number;
   officeDuration?: string;
   morningTaskCount: number;
   tasksAdded: number;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext.tsx';
 
 // Office Coordinates from Google Maps (https://maps.app.goo.gl/Kr79KhSYvdmvGCyc6)
 const OFFICE_LAT = 23.2338255;
