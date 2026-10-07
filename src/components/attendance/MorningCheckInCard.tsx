@@ -17,23 +17,7 @@ const MOCK_OFFICE_LNG = 77.808123;
 export const MorningCheckInCard: React.FC<Props> = ({ summary, onAttendanceUpdated }) => {
   const [loading, setLoading] = useState(false);
   const [locationError, setLocationError] = useState<string | null>(null);
-  const [addressName, setAddressName] = useState<string | null>(null);
   const { showToast } = useToast();
-
-  React.useEffect(() => {
-    if (summary?.morningLatitude && summary?.morningLongitude) {
-      const lat = summary.morningLatitude;
-      const lng = summary.morningLongitude;
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data && data.display_name) {
-            setAddressName(data.display_name);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [summary?.morningLatitude, summary?.morningLongitude]);
 
   const isCheckedIn = summary?.status === 'CHECKED_IN' || summary?.status === 'CHECKED_OUT';
 
@@ -140,32 +124,6 @@ export const MorningCheckInCard: React.FC<Props> = ({ summary, onAttendanceUpdat
               <span className="text-2xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-lg">
                 Verified
               </span>
-            </div>
-
-            <div className="p-4 bg-sky-50/80 rounded-2xl border border-sky-200/70 flex items-start justify-between gap-3">
-              <div className="flex items-start gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center font-semibold text-xs shrink-0 mt-0.5">
-                  <MapPin className="w-4 h-4 text-sky-600" />
-                </div>
-                <div>
-                  <span className="text-xs text-sky-900/70 font-semibold block">Exact Check-In Location</span>
-                  <span className="text-xs font-mono font-extrabold text-sky-950 block">
-                    {summary?.morningLatitude && summary?.morningLongitude
-                      ? `Lat: ${summary.morningLatitude.toFixed(6)}, Lng: ${summary.morningLongitude.toFixed(6)}`
-                      : 'GPS Verified Location'}
-                  </span>
-                  {addressName && (
-                    <span className="text-2xs text-slate-600 font-medium line-clamp-1 mt-0.5 block" title={addressName}>
-                      📍 {addressName}
-                    </span>
-                  )}
-                </div>
-              </div>
-              {summary?.morningDistanceFromOffice !== undefined && summary?.morningDistanceFromOffice !== null && (
-                <span className="text-2xs font-bold text-sky-800 bg-sky-100 border border-sky-200 px-2.5 py-1 rounded-lg shrink-0">
-                  {summary.morningDistanceFromOffice < 1 ? 'At Office' : `${Math.round(summary.morningDistanceFromOffice)}m from office`}
-                </span>
-              )}
             </div>
 
             <div className="p-4 bg-amber-50/70 rounded-2xl border border-amber-200/60 flex items-center justify-between">

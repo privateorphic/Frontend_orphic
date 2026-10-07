@@ -50,11 +50,26 @@ export default function HrCreateEmployeePage() {
 
   const [errors, setErrors] = useState<Partial<Record<keyof CreateEmployeeRequest | 'confirmPassword', string>>>({});
 
+  const DEFAULT_DEPARTMENTS: Department[] = [
+    { id: 1, name: 'Search Engine Optimisation (SEO)', description: 'Search Engine Optimisation Department' },
+    { id: 2, name: 'Video Editing', description: 'Video Editing and Post Production' },
+    { id: 3, name: 'Social Media', description: 'Social Media Marketing & Operations' },
+    { id: 4, name: 'Graphic Design', description: 'Graphic Design and Visual Media' },
+    { id: 5, name: 'Digital Marketing', description: 'Digital Marketing & Advertising' },
+    { id: 6, name: 'Human Resource (HR)', description: 'Human Resource and People Operations' }
+  ];
+
   useEffect(() => {
     departmentService.getAll().then((depts) => {
-      setDepartments(depts);
-      if (depts.length > 0 && !form.departmentId) {
-        setForm((p) => ({ ...p, departmentId: depts[0].id }));
+      const list = (depts && depts.length > 0) ? depts : DEFAULT_DEPARTMENTS;
+      setDepartments(list);
+      if (list.length > 0 && !form.departmentId) {
+        setForm((p) => ({ ...p, departmentId: list[0].id }));
+      }
+    }).catch(() => {
+      setDepartments(DEFAULT_DEPARTMENTS);
+      if (!form.departmentId) {
+        setForm((p) => ({ ...p, departmentId: DEFAULT_DEPARTMENTS[0].id }));
       }
     });
   }, []);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Search, Trash2, Edit, Filter } from 'lucide-react';
+import { Plus, Search, Trash2, Edit, Filter, FileSpreadsheet } from 'lucide-react';
 import { taskService } from '../../services/taskService.ts';
 import { employeeService } from '../../services/employeeService.ts';
 import type { Task, TaskRequest, TaskStatus, TaskPriority, Employee } from '../../types/index.ts';
@@ -10,6 +10,7 @@ import ErrorState from '../../components/common/ErrorState.tsx';
 import EmptyState from '../../components/common/EmptyState.tsx';
 import Modal from '../../components/common/Modal.tsx';
 import { toast } from '../../components/common/Toast.tsx';
+import { TaskExportModal } from '../../components/tasks/TaskExportModal.tsx';
 
 function TaskForm({ employees, initial, onSubmit, loading }: {
   employees: Employee[];
@@ -84,6 +85,7 @@ export default function AdminTasksPage() {
   const [statusFilter, setStatusFilter] = useState<TaskStatus | ''>('');
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | ''>('');
   const [createOpen, setCreateOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [formLoading, setFormLoading] = useState(false);
 
@@ -158,14 +160,23 @@ export default function AdminTasksPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="page-title">Tasks</h1>
           <p className="page-subtitle">{tasks.length} total tasks</p>
         </div>
-        <button onClick={() => setCreateOpen(true)} className="btn-primary">
-          <Plus size={16} /> Create Task
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setExportOpen(true)}
+            className="flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-800 rounded-xl transition shadow-sm"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>Export Excel</span>
+          </button>
+          <button onClick={() => setCreateOpen(true)} className="btn-primary">
+            <Plus size={16} /> Create Task
+          </button>
+        </div>
       </div>
 
       <div className="card p-4 flex flex-col sm:flex-row gap-3">
@@ -270,6 +281,11 @@ export default function AdminTasksPage() {
           />
         )}
       </Modal>
+
+      <TaskExportModal
+        isOpen={exportOpen}
+        onClose={() => setExportOpen(false)}
+      />
     </div>
   );
 }

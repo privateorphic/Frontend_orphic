@@ -50,11 +50,12 @@ export default function HrDashboardPage() {
         employeesOnLeave: 2,
         pendingLeaveRequests: 1,
         departmentDistribution: {
-          'Engineering': 5,
-          'Human Resources': 2,
-          'Design & Product': 2,
-          'Marketing': 2,
-          'IT & Ops': 1,
+          'Search Engine Optimisation (SEO)': 4,
+          'Video Editing': 2,
+          'Social Media': 2,
+          'Graphic Design': 2,
+          'Digital Marketing': 1,
+          'Human Resource (HR)': 1,
         },
         leaveDistribution: {
           'Casual Leave': 4,

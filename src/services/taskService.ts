@@ -40,6 +40,28 @@ export const taskService = {
     await api.delete(`/admin/tasks/${id}`);
   },
 
+  exportTasksExcel: async (params?: {
+    fromDate?: string;
+    toDate?: string;
+    employeeId?: number;
+    departmentId?: number;
+    status?: TaskStatus;
+    priority?: TaskPriority;
+  }): Promise<{ blob: Blob; filename: string }> => {
+    const res = await api.get('/admin/tasks/export', {
+      params,
+      responseType: 'blob',
+    });
+    
+    let filename = 'Employee_Work_Report.xlsx';
+    const disposition = res.headers['content-disposition'];
+    if (disposition && disposition.includes('filename=')) {
+      filename = disposition.split('filename=')[1].replace(/["']/g, '');
+    }
+
+    return { blob: res.data, filename };
+  },
+
   // Employee
   getMyTasks: async (status?: TaskStatus): Promise<Task[]> => {
     const res = await api.get<ApiResponse<any>>('/employee/tasks', {
