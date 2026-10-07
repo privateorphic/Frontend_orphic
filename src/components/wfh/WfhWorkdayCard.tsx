@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Home, MapPin, Play, Square, Clock, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
 import { wfhService } from '../../services/wfhService';
 import type { AttendanceRecord } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface WfhWorkdayCardProps {
   attendance: AttendanceRecord | null;
@@ -42,7 +43,7 @@ export const WfhWorkdayCard: React.FC<WfhWorkdayCardProps> = ({
               position.coords.longitude,
               position.coords.accuracy
             );
-            setLocationStatus(`Location verified (${new Date().toLocaleTimeString()})`);
+            setLocationStatus(`Location verified (${formatTime(new Date())})`);
           } catch {
             setLocationStatus('Location update failed');
           }
@@ -159,7 +160,7 @@ export const WfhWorkdayCard: React.FC<WfhWorkdayCardProps> = ({
           <span className="text-xs text-slate-500 uppercase tracking-wider block mb-1">Check-in Time</span>
           <div className="flex items-center gap-2 text-slate-200 text-sm font-semibold">
             <Clock className="w-4 h-4 text-orange-400" />
-            <span>{attendance?.morningCheckIn || '—'}</span>
+            <span>{formatTime(attendance?.morningCheckIn)}</span>
           </div>
         </div>
 

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Search, Paperclip, ExternalLink, FileText } from 'lucide-react';
-import { dailyWorkService } from '../../services/dailyWorkService';
-import type { DailyWork } from '../../types';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
+import { dailyWorkService } from '../../services/dailyWorkService.ts';
+import type { DailyWork } from '../../types/index.ts';
+import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
+import ErrorState from '../../components/common/ErrorState.tsx';
+import EmptyState from '../../components/common/EmptyState.tsx';
 
 export default function EmployeeWorkHistoryPage() {
   const [work, setWork] = useState<DailyWork[]>([]);

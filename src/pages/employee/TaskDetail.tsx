@@ -9,6 +9,7 @@ import ProgressBar from '../../components/common/ProgressBar';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import ErrorState from '../../components/common/ErrorState';
 import { toast } from '../../components/common/Toast';
+import { formatTime } from '../../utils/formatters.ts';
 import { CreateEmployeeTaskModal } from '../../components/tasks/CreateEmployeeTaskModal';
 
 export default function EmployeeTaskDetailPage() {
@@ -53,7 +54,7 @@ export default function EmployeeTaskDetailPage() {
       // Seed work note history if existing workUpdate exists
       if (t.workUpdate) {
         setNotesHistory([
-          { note: t.workUpdate, timestamp: t.updatedAt ? new Date(t.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Logged Update' },
+          { note: t.workUpdate, timestamp: t.updatedAt ? formatTime(t.updatedAt) : 'Logged Update' },
         ]);
       } else {
         setNotesHistory([]);
@@ -82,7 +83,7 @@ export default function EmployeeTaskDetailPage() {
 
     try {
       const updatedNote = workNoteInput.trim()
-        ? (form.workUpdate ? `${form.workUpdate}\n[${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}]: ${workNoteInput.trim()}` : workNoteInput.trim())
+        ? (form.workUpdate ? `${form.workUpdate}\n[${formatTime(new Date())}]: ${workNoteInput.trim()}` : workNoteInput.trim())
         : form.workUpdate;
 
       const payload: EmployeeTaskUpdateRequest = {
@@ -97,7 +98,7 @@ export default function EmployeeTaskDetailPage() {
       if (workNoteInput.trim()) {
         setNotesHistory((prev) => [
           ...prev,
-          { note: workNoteInput.trim(), timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
+          { note: workNoteInput.trim(), timestamp: formatTime(new Date()) },
         ]);
         setWorkNoteInput('');
       }

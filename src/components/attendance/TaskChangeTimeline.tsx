@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, PlusCircle, CheckCircle2, Clock, FileText, ArrowRight, TrendingUp } from 'lucide-react';
 import type { TaskActivityTimeline } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   timeline: TaskActivityTimeline[];
@@ -59,7 +60,7 @@ export const TaskChangeTimeline: React.FC<Props> = ({ timeline }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
                   <h4 className="text-sm font-bold text-slate-900">{item.taskTitle}</h4>
                   <span className="text-xs font-mono font-semibold text-slate-400 bg-white px-2.5 py-1 rounded-lg border border-slate-200/60 w-fit">
-                    {new Date(item.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatTime(item.createdAt)}
                   </span>
                 </div>
 

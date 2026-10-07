@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Loader2, Save, Upload, Link2, FileCheck, Paperclip, X, FileText, Calendar, MessageSquare, AlertCircle } from 'lucide-react';
-import { dailyWorkService } from '../../services/dailyWorkService';
-import type { DailyWorkRequest } from '../../types';
-import { toast } from '../../components/common/Toast';
+import { dailyWorkService } from '../../services/dailyWorkService.ts';
+import type { DailyWorkRequest } from '../../types/index.ts';
+import { toast } from '../../components/common/Toast.tsx';
 
 export default function EmployeeDailyWorkPage() {
   const [loading, setLoading] = useState(false);

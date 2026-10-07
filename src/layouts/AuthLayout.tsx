@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import logoImg from '../assets/orphicsolution_logo.jpg';
+const logoImg = '/orphicsolution_logo.jpg';
 
 export default function AuthLayout() {
   const [logoError, setLogoError] = useState(false);

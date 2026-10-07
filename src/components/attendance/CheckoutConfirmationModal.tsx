@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Moon, CheckCircle2, Clock, ListTodo, PlusCircle, AlertCircle, RefreshCw } from 'lucide-react';
 import type { DailyAttendanceSummary } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   isOpen: boolean;
@@ -76,11 +77,11 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="bg-white p-3.5 rounded-xl border border-slate-200/60 shadow-2xs">
                 <span className="text-xs text-slate-500 font-medium block">Morning Check-In</span>
-                <span className="font-extrabold text-slate-900 font-mono text-base">{summary?.morningCheckIn || '09:00 AM'}</span>
+                <span className="font-extrabold text-slate-900 font-mono text-base">{formatTime(summary?.morningCheckIn)}</span>
               </div>
               <div className="bg-white p-3.5 rounded-xl border border-slate-200/60 shadow-2xs">
                 <span className="text-xs text-slate-500 font-medium block">Current Time</span>
-                <span className="font-extrabold text-indigo-600 font-mono text-base">{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <span className="font-extrabold text-indigo-600 font-mono text-base">{formatTime(new Date())}</span>
               </div>
             </div>
           </div>

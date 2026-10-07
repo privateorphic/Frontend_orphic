@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sun, Moon, PlusCircle, CheckCircle2, ListFilter, ArrowUpRight, CheckCircle, Clock } from 'lucide-react';
 import type { TaskSnapshot, TaskChanges } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   morningTasks: TaskSnapshot[];
@@ -226,7 +227,7 @@ export const TaskSnapshotComparison: React.FC<Props> = ({
                 <div className="flex items-center gap-2 text-2xs text-slate-500 font-medium mt-1">
                   <span>Task #{t.taskId}</span>
                   <span>•</span>
-                  <span>Captured at {new Date(t.snapshotTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                  <span>Captured at {formatTime(t.snapshotTime)}</span>
                 </div>
               </div>
               <div className="flex items-center gap-3 shrink-0">

@@ -7,6 +7,7 @@ import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
 import ErrorState from '../../components/common/ErrorState.tsx';
 import EmptyState from '../../components/common/EmptyState.tsx';
 import { useAuth } from '../../context/AuthContext.tsx';
+import { formatTime } from '../../utils/formatters.ts';
 
 export default function EmployeeLoginHistoryPage() {
   const { user } = useAuth();
@@ -65,11 +66,7 @@ export default function EmployeeLoginHistoryPage() {
                 <Clock size={13} /> Login Time
               </p>
               <p className="text-sm font-bold font-mono text-emerald-700">
-                {todaySession.loginTime
-                  ? todaySession.loginTime.length === 5
-                    ? todaySession.loginTime
-                    : new Date(`2000-01-01T${todaySession.loginTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-                  : '—'}
+                {formatTime(todaySession.loginTime)}
               </p>
             </div>
 
@@ -78,11 +75,7 @@ export default function EmployeeLoginHistoryPage() {
                 <Clock size={13} /> Logout Time
               </p>
               <p className={`text-sm font-bold font-mono ${todaySession.logoutTime ? 'text-red-600' : 'text-emerald-600'}`}>
-                {todaySession.logoutTime
-                  ? todaySession.logoutTime.length === 5
-                    ? todaySession.logoutTime
-                    : new Date(`2000-01-01T${todaySession.logoutTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-                  : 'Active'}
+                {todaySession.logoutTime ? formatTime(todaySession.logoutTime) : 'Active'}
               </p>
             </div>
 
@@ -127,8 +120,8 @@ export default function EmployeeLoginHistoryPage() {
                   {sessions.map((s) => (
                     <tr key={s.id} className="hover:bg-[#FFF4EC]/60 transition-colors text-xs">
                       <td className="table-cell font-mono font-bold text-slate-900">{s.loginDate}</td>
-                      <td className="table-cell font-mono font-semibold text-emerald-700">{s.loginTime || '—'}</td>
-                      <td className="table-cell font-mono font-semibold text-red-600">{s.logoutTime ?? '—'}</td>
+                      <td className="table-cell font-mono font-semibold text-emerald-700">{formatTime(s.loginTime)}</td>
+                      <td className="table-cell font-mono font-semibold text-red-600">{s.logoutTime ? formatTime(s.logoutTime) : '—'}</td>
                       <td className="table-cell font-mono text-slate-700">{s.sessionDuration ?? '—'}</td>
                       <td className="table-cell"><Badge value={s.status} /></td>
                     </tr>

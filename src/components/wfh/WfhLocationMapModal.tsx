@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, X, ExternalLink, Clock, User } from 'lucide-react';
 import type { WfhActiveEmployee } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface WfhLocationMapModalProps {
   employee: WfhActiveEmployee | null;
@@ -53,12 +54,12 @@ export const WfhLocationMapModal: React.FC<WfhLocationMapModalProps> = ({
             </div>
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span className="text-slate-500 uppercase tracking-wider block mb-1">Check-in Time</span>
-              <span className="font-semibold text-slate-200">{employee.checkInTime || '—'}</span>
+              <span className="font-semibold text-slate-200">{formatTime(employee.checkInTime)}</span>
             </div>
             <div className="bg-slate-950 p-3 rounded-xl border border-slate-800">
               <span className="text-slate-500 uppercase tracking-wider block mb-1">Last Captured</span>
               <span className="font-semibold text-slate-200">
-                {employee.lastCapturedAt ? new Date(employee.lastCapturedAt).toLocaleTimeString() : '—'}
+                {formatTime(employee.lastCapturedAt)}
               </span>
             </div>
           </div>

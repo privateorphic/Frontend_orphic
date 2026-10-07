@@ -1,15 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Clock, Building, Mail, Phone, Calendar, ShieldCheck, Briefcase } from 'lucide-react';
-import { employeeService } from '../../services/employeeService';
-import { loginActivityService } from '../../services/loginActivityService';
-import type { Employee, LoginActivity } from '../../types';
-import Badge from '../../components/common/Badge';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
-import UserAvatar from '../../components/common/UserAvatar';
-import { toast } from '../../components/common/Toast';
+import { employeeService } from '../../services/employeeService.ts';
+import { loginActivityService } from '../../services/loginActivityService.ts';
+import type { Employee, LoginActivity } from '../../types/index.ts';
+import Badge from '../../components/common/Badge.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
+import ErrorState from '../../components/common/ErrorState.tsx';
+import EmptyState from '../../components/common/EmptyState.tsx';
+import UserAvatar from '../../components/common/UserAvatar.tsx';
+import { toast } from '../../components/common/Toast.tsx';
+import { formatTime } from '../../utils/formatters.ts';
 
 type Tab = 'overview' | 'loginActivity';
 
@@ -221,8 +222,8 @@ export default function AdminEmployeeDetailPage() {
                   {loginActivity.map((la) => (
                     <tr key={la.id} className="hover:bg-slate-50 transition">
                       <td className="table-cell font-mono text-xs font-semibold text-slate-700">{la.loginDate}</td>
-                      <td className="table-cell font-mono text-xs font-semibold text-emerald-700">{la.loginTime}</td>
-                      <td className="table-cell font-mono text-xs text-red-600">{la.logoutTime ?? '—'}</td>
+                      <td className="table-cell font-mono text-xs font-semibold text-emerald-700">{formatTime(la.loginTime)}</td>
+                      <td className="table-cell font-mono text-xs text-red-600">{la.logoutTime ? formatTime(la.logoutTime) : '—'}</td>
                       <td className="table-cell font-mono text-xs font-semibold text-slate-800">
                         {la.sessionDuration ?? '—'}
                       </td>

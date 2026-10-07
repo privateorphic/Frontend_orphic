@@ -4,6 +4,7 @@ import type { DailyAttendanceSummary } from '../../types';
 import { CheckoutConfirmationModal } from './CheckoutConfirmationModal';
 import { attendanceService } from '../../services/attendanceService';
 import { useToast } from '../common/Toast';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   summary: DailyAttendanceSummary | null;
@@ -101,7 +102,7 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
                   <div>
                     <span className="text-xs text-slate-500 font-medium block">Departure Timestamp</span>
                     <span className="text-base font-extrabold text-slate-900 font-mono">
-                      {summary?.eveningCheckOut || '06:00 PM'}
+                      {formatTime(summary?.eveningCheckOut)}
                     </span>
                   </div>
                 </div>

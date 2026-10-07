@@ -3,6 +3,7 @@ import { MapPin, Sun, CheckCircle2, Clock, AlertCircle, RefreshCw, ShieldCheck, 
 import type { DailyAttendanceSummary } from '../../types';
 import { attendanceService } from '../../services/attendanceService';
 import { useToast } from '../common/Toast';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   summary: DailyAttendanceSummary | null;
@@ -132,7 +133,7 @@ export const MorningCheckInCard: React.FC<Props> = ({ summary, onAttendanceUpdat
                 <div>
                   <span className="text-xs text-slate-500 font-medium block">Check-In Timestamp</span>
                   <span className="text-base font-extrabold text-slate-900 font-mono">
-                    {summary?.morningCheckIn || '09:00 AM'}
+                    {formatTime(summary?.morningCheckIn)}
                   </span>
                 </div>
               </div>

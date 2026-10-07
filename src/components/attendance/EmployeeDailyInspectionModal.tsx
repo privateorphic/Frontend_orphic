@@ -5,6 +5,7 @@ import { attendanceService } from '../../services/attendanceService';
 import { TaskSnapshotComparison } from './TaskSnapshotComparison';
 import { TaskChangeTimeline } from './TaskChangeTimeline';
 import { useToast } from '../common/Toast';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   isOpen: boolean;
@@ -89,13 +90,13 @@ export const EmployeeDailyInspectionModal: React.FC<Props> = ({
                 <div>
                   <span className="text-xs text-slate-500 block">Morning Check-In</span>
                   <span className="font-bold text-slate-900 font-mono text-sm">
-                    {activity.summary?.morningCheckIn || activity.attendance?.morningCheckIn || '—'}
+                    {formatTime(activity.summary?.morningCheckIn || activity.attendance?.morningCheckIn)}
                   </span>
                 </div>
                 <div>
                   <span className="text-xs text-slate-500 block">Evening Check-Out</span>
                   <span className="font-bold text-slate-900 font-mono text-sm">
-                    {activity.summary?.eveningCheckOut || activity.attendance?.eveningCheckOut || '—'}
+                    {formatTime(activity.summary?.eveningCheckOut || activity.attendance?.eveningCheckOut)}
                   </span>
                 </div>
                 <div>

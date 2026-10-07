@@ -9,9 +9,9 @@ import {
   PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer, Legend,
   AreaChart, Area
 } from 'recharts';
-import { dashboardService } from '../../services/reportService';
-import type { AdminDashboard } from '../../types';
-import ErrorState from '../../components/common/ErrorState';
+import { dashboardService } from '../../services/reportService.ts';
+import type { AdminDashboard } from '../../types/index.ts';
+import ErrorState from '../../components/common/ErrorState.tsx';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 

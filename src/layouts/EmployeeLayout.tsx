@@ -7,7 +7,7 @@ import {
 import { useAuth } from '../context/AuthContext.tsx';
 import { notificationService } from '../services/notificationService.ts';
 import { toast } from '../components/common/Toast.tsx';
-import logoImg from '../assets/orphicsolution_logo.jpg';
+const logoImg = '/orphicsolution_logo.jpg';
 
 const navItems = [
   { to: '/employee/dashboard',        icon: LayoutDashboard, label: 'Dashboard' },

@@ -3,6 +3,7 @@ import { Calendar, Search, Filter, Eye, CheckCircle, Clock, RotateCcw, ChevronLe
 import type { AttendanceRecord } from '../../types';
 import { attendanceService } from '../../services/attendanceService';
 import { useToast } from '../common/Toast';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface Props {
   onInspectEmployee: (employeeId: number | string, date: string) => void;
@@ -189,11 +190,11 @@ export const DailyAttendanceTable: React.FC<Props> = ({ onInspectEmployee, isAdm
                   </td>
 
                   <td className="px-6 py-4 font-mono font-semibold text-slate-800">
-                    {record.morningCheckIn || record.checkInTime || '—'}
+                    {formatTime(record.morningCheckIn || record.checkInTime)}
                   </td>
 
                   <td className="px-6 py-4 font-mono font-semibold text-slate-800">
-                    {record.eveningCheckOut || record.checkOutTime || '—'}
+                    {formatTime(record.eveningCheckOut || record.checkOutTime)}
                   </td>
 
                   <td className="px-6 py-4">

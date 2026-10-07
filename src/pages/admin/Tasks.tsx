@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Plus, Search, Trash2, Edit, Filter } from 'lucide-react';
-import { taskService } from '../../services/taskService';
-import { employeeService } from '../../services/employeeService';
-import type { Task, TaskRequest, TaskStatus, TaskPriority, Employee } from '../../types';
-import Badge from '../../components/common/Badge';
-import ProgressBar from '../../components/common/ProgressBar';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import ErrorState from '../../components/common/ErrorState';
-import EmptyState from '../../components/common/EmptyState';
-import Modal from '../../components/common/Modal';
-import { toast } from '../../components/common/Toast';
+import { taskService } from '../../services/taskService.ts';
+import { employeeService } from '../../services/employeeService.ts';
+import type { Task, TaskRequest, TaskStatus, TaskPriority, Employee } from '../../types/index.ts';
+import Badge from '../../components/common/Badge.tsx';
+import ProgressBar from '../../components/common/ProgressBar.tsx';
+import LoadingSpinner from '../../components/common/LoadingSpinner.tsx';
+import ErrorState from '../../components/common/ErrorState.tsx';
+import EmptyState from '../../components/common/EmptyState.tsx';
+import Modal from '../../components/common/Modal.tsx';
+import { toast } from '../../components/common/Toast.tsx';
 
 function TaskForm({ employees, initial, onSubmit, loading }: {
   employees: Employee[];

@@ -23,6 +23,7 @@ import { WfhRequestModal } from '../../components/wfh/WfhRequestModal';
 import { EndWorkDayModal } from '../../components/wfh/EndWorkDayModal';
 import { wfhService } from '../../services/wfhService';
 import type { AttendanceRecord } from '../../types';
+import { formatTime } from '../../utils/formatters.ts';
 
 interface StatCardProps { label: string; value: number | string; icon: React.ReactNode; color: string; }
 function StatCard({ label, value, icon, color }: StatCardProps) {
@@ -175,9 +176,7 @@ export default function EmployeeDashboardPage() {
               <LogIn size={14} className="text-orange-200" />
               <span className="text-orange-100">Today's Login: </span>
               <span className="font-semibold">
-                {loginTime
-                  ? new Date(`2000-01-01T${loginTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })
-                  : 'Not logged'}
+                {loginTime ? formatTime(loginTime) : 'Not logged'}
               </span>
             </div>
             {data.currentSessionDuration && (
@@ -261,7 +260,7 @@ export default function EmployeeDashboardPage() {
             <div>
               <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Today's Shift Completed (Checked Out)</h4>
               <p className="text-xs text-slate-600 font-medium mt-0.5">
-                You checked out at {attendanceSummary?.eveningCheckOut || 'End of Shift'}. Updating today's tasks is locked for this shift.
+                You checked out at {formatTime(attendanceSummary?.eveningCheckOut)}. Updating today's tasks is locked for this shift.
               </p>
             </div>
           </div>
@@ -280,7 +279,7 @@ export default function EmployeeDashboardPage() {
             <div>
               <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Active Shift (Checked-In)</h4>
               <p className="text-xs text-slate-600 font-medium mt-0.5">
-                Checked in at {attendanceSummary?.morningCheckIn || 'Today'}. You are active to add, update, and complete shift tasks.
+                Checked in at {formatTime(attendanceSummary?.morningCheckIn)}. You are active to add, update, and complete shift tasks.
               </p>
             </div>
           </div>

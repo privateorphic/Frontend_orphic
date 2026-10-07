@@ -12,6 +12,10 @@ if not exist node_modules (
     call npm install
 )
 
+if exist node_modules\.vite (
+    rmdir /s /q node_modules\.vite 2>nul
+)
+
 set NODE_OPTIONS=--preserve-symlinks --preserve-symlinks-main
 echo Starting Vite Development Server...
 call npm run dev -- --force
