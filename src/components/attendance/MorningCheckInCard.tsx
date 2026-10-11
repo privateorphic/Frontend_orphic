@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Sun, CheckCircle2, Clock, AlertCircle, RefreshCw, ShieldCheck, Terminal } from 'lucide-react';
+import { MapPin, Sun, CheckCircle2, Clock, AlertCircle, RefreshCw, ShieldCheck } from 'lucide-react';
 import type { DailyAttendanceSummary } from '../../types';
 import { attendanceService } from '../../services/attendanceService';
 import { useToast } from '../common/Toast';
@@ -10,7 +10,7 @@ interface Props {
   onAttendanceUpdated: () => void;
 }
 
-// Default Office Coordinates for Developer Mocking
+// Office coordinates fallback for local development testing
 const MOCK_OFFICE_LAT = 23.525123;
 const MOCK_OFFICE_LNG = 77.808123;
 
@@ -26,10 +26,10 @@ export const MorningCheckInCard: React.FC<Props> = ({ summary, onAttendanceUpdat
     setLocationError(null);
     try {
       await attendanceService.checkIn({ latitude: lat, longitude: lng });
-      showToast('Morning Check-In successful! Morning task snapshot recorded.', 'success');
+      showToast('Morning Check-In successful!', 'success');
       onAttendanceUpdated();
     } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Check-in failed. Please ensure you are within office radius.';
+      const msg = err.response?.data?.message || err.message || 'Check-in failed. Please ensure you are within the office radius.';
       setLocationError(msg);
       showToast(msg, 'error');
     } finally {
@@ -38,177 +38,148 @@ export const MorningCheckInCard: React.FC<Props> = ({ summary, onAttendanceUpdat
   };
 
   const handleCheckIn = () => {
-    if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported by your browser.');
-      showToast('Geolocation is not supported by your browser.', 'error');
-      return;
-    }
-
     setLoading(true);
     setLocationError(null);
+
+    if (!navigator.geolocation) {
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        performCheckInWithCoords(MOCK_OFFICE_LAT, MOCK_OFFICE_LNG);
+        return;
+      }
+      setLocationError('Geolocation is not supported by your browser.');
+      showToast('Geolocation is not supported by your browser.', 'error');
+      setLoading(false);
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         await performCheckInWithCoords(position.coords.latitude, position.coords.longitude);
       },
-      (error) => {
+      async (error) => {
+        // Automatically fallback to office coords if testing on localhost
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          await performCheckInWithCoords(MOCK_OFFICE_LAT, MOCK_OFFICE_LNG);
+          return;
+        }
         setLoading(false);
         let msg = 'Failed to retrieve your location.';
         if (error.code === error.PERMISSION_DENIED) {
-          msg = 'Location access denied. Please enable GPS access in your browser settings to check in.';
+          msg = 'Location access denied. Please enable GPS in your browser settings to check in.';
         } else if (error.code === error.POSITION_UNAVAILABLE) {
-          msg = 'Location information unavailable. Please verify GPS signal.';
+          msg = 'Location information unavailable. Please verify your GPS signal.';
         } else if (error.code === error.TIMEOUT) {
           msg = 'Location request timed out. Please try again.';
         }
         setLocationError(msg);
         showToast(msg, 'error');
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
     );
   };
 
-  const handleDevMockCheckIn = () => {
-    performCheckInWithCoords(MOCK_OFFICE_LAT, MOCK_OFFICE_LNG);
-  };
-
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between group">
-      {/* Decorative Top Accent Line */}
-      <div className={`absolute top-0 left-0 right-0 h-1.5 transition-all ${isCheckedIn ? 'bg-emerald-500' : 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600'}`} />
-
-      {/* Background Accent Glow */}
-      <div className={`absolute -right-16 -top-16 w-40 h-40 rounded-full blur-3xl pointer-events-none transition-opacity ${isCheckedIn ? 'bg-emerald-500/10' : 'bg-amber-500/15'}`} />
-
+    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow p-5 sm:p-6 flex flex-col justify-between">
       <div>
-        {/* Header Section */}
-        <div className="flex items-start justify-between gap-4 mb-5">
-          <div className="flex items-center gap-3.5">
-            <div className={`w-13 h-13 rounded-2xl flex items-center justify-center shadow-xs transition-transform group-hover:scale-105 ${isCheckedIn ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20' : 'bg-gradient-to-br from-amber-100 to-orange-100 text-amber-600 border border-amber-200/60'}`}>
-              <Sun className="w-6 h-6 animate-pulse" />
+        {/* Header */}
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
+            <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
+              isCheckedIn ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+            }`}>
+              <Sun className="w-5 h-5" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Morning Office Arrival</h3>
-              </div>
-              <p className="text-xs text-slate-500 font-medium mt-0.5">Record arrival time & freeze morning task snapshot</p>
+              <h3 className="text-base font-bold text-slate-900">Morning Check-In</h3>
+              <p className="text-xs text-slate-500">Record your arrival time</p>
             </div>
           </div>
 
           {isCheckedIn ? (
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs shrink-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Checked In
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              Checked In
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200/80 shadow-2xs shrink-0">
-              <Clock className="w-3.5 h-3.5 text-amber-600" /> Pending Check-In
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
+              <Clock className="w-3.5 h-3.5 text-amber-600" />
+              Pending
             </span>
           )}
         </div>
 
+        {/* Checked-in state */}
         {isCheckedIn ? (
-          <div className="space-y-3 mt-4">
-            <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/60 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-xs">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div>
-                  <span className="text-xs text-slate-500 font-medium block">Check-In Timestamp</span>
-                  <span className="text-base font-extrabold text-slate-900 font-mono">
-                    {formatTime(summary?.morningCheckIn)}
-                  </span>
-                </div>
+          <div className="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <Clock className="w-4 h-4" />
               </div>
-              <span className="text-2xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-lg">
-                Verified
-              </span>
-            </div>
-
-            <div className="p-4 bg-amber-50/70 rounded-2xl border border-amber-200/60 flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-semibold text-xs">
-                  <CheckCircle2 className="w-4 h-4 text-amber-600" />
-                </div>
-                <div>
-                  <span className="text-xs text-amber-900/70 font-medium block">Locked Task Snapshot</span>
-                  <span className="text-xs font-extrabold text-amber-950">
-                    {summary?.morningTaskCount ?? 0} Tasks Captured at Check-In
-                  </span>
-                </div>
+              <div>
+                <span className="text-xs text-slate-500 font-medium block">Arrival Time</span>
+                <span className="text-sm font-bold text-slate-900 font-mono">
+                  {formatTime(summary?.morningCheckIn, false)}
+                </span>
               </div>
-              <span className="inline-flex items-center gap-1 text-2xs font-bold text-amber-800 bg-amber-200/60 px-2.5 py-1 rounded-lg">
-                <ShieldCheck className="w-3 h-3 text-amber-700" /> Snapshot Frozen
-              </span>
             </div>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-100/70 px-2.5 py-1 rounded-lg">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              Verified
+            </span>
           </div>
         ) : (
-          <div className="space-y-4">
-            <div className="p-4 bg-slate-50/90 rounded-2xl border border-slate-200/60 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                <ShieldCheck className="w-4 h-4 text-amber-500" />
-                <span>Automated Office Check-In Rules</span>
+          locationError && (
+            <div className="mt-3 p-3.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl space-y-2">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+                <span className="font-medium">{locationError}</span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Clicking <strong className="text-slate-900 font-semibold">Perform Morning Check-In</strong> will verify your GPS location against the office perimeter and capture your starting daily task snapshot for manager review.
-              </p>
-            </div>
-
-            {locationError && (
-              <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-2xl space-y-2.5 shadow-2xs">
-                <div className="flex items-start gap-2.5">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
-                  <span className="font-medium">{locationError}</span>
-                </div>
+              <div className="flex flex-wrap items-center gap-2 pt-1">
                 {locationError.toLowerCase().includes('wfh') && (
                   <a
                     href="/employee/leaves"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EF7D35] hover:bg-[#DC6422] text-white font-bold rounded-xl shadow-xs text-xs transition mt-1"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#EF7D35] hover:bg-[#DC6422] text-white font-bold rounded-lg text-xs transition"
                   >
-                    🏠 Apply for WFH Request
+                    Apply for WFH Request
                   </a>
                 )}
+                {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+                  <button
+                    type="button"
+                    onClick={() => performCheckInWithCoords(MOCK_OFFICE_LAT, MOCK_OFFICE_LNG)}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-800 text-white font-semibold rounded-lg text-xs transition"
+                  >
+                    Test with Office GPS
+                  </button>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )
         )}
       </div>
 
+      {/* Action button if pending */}
       {!isCheckedIn && (
-        <div className="pt-5 mt-4 border-t border-slate-100 space-y-3">
+        <div className="pt-4 mt-4 border-t border-slate-100">
           <button
             onClick={handleCheckIn}
             disabled={loading}
-            className="w-full py-3.5 px-5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-[#EF7D35] hover:bg-[#DC6422] active:bg-[#C85317] text-white font-bold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                <span>Verifying Location & Checking In...</span>
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Checking In...</span>
               </>
             ) : (
               <>
-                <MapPin className="w-4.5 h-4.5" />
+                <MapPin className="w-4 h-4" />
                 <span>Perform Morning Check-In</span>
               </>
             )}
-          </button>
-
-          {/* Dev Mode Testing Shortcut */}
-          <button
-            onClick={handleDevMockCheckIn}
-            disabled={loading}
-            className="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors flex items-center justify-center gap-2 border border-slate-200"
-            title="Use Default Office Location Coordinates (23.525123, 77.808123) for testing"
-          >
-            <Terminal className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Dev Mode: Check-In with Office GPS Coordinates</span>
           </button>
         </div>
       )}
     </div>
   );
 };
-
-

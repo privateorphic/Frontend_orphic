@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Moon, CheckCircle2, Clock, Lock, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Moon, CheckCircle2, Clock, Lock, ArrowRight } from 'lucide-react';
 import type { DailyAttendanceSummary } from '../../types';
 import { CheckoutConfirmationModal } from './CheckoutConfirmationModal';
 import { attendanceService } from '../../services/attendanceService';
@@ -21,7 +21,7 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
   const handleConfirmCheckout = async (location?: { latitude?: number; longitude?: number }) => {
     try {
       await attendanceService.checkOut(location);
-      showToast('Evening Check-Out successful! Work summary finalized.', 'success');
+      showToast('Evening Check-Out successful!', 'success');
       setModalOpen(false);
       onAttendanceUpdated();
     } catch (err: any) {
@@ -32,140 +32,88 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
 
   return (
     <>
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between group">
-        {/* Top Accent Line */}
-        <div
-          className={`absolute top-0 left-0 right-0 h-1.5 transition-all ${
-            isCheckedOut
-              ? 'bg-indigo-600'
-              : isCheckedIn
-              ? 'bg-gradient-to-r from-indigo-500 via-purple-600 to-indigo-700'
-              : 'bg-slate-300'
-          }`}
-        />
-
-        {/* Background Glow */}
-        <div
-          className={`absolute -right-16 -top-16 w-40 h-40 rounded-full blur-3xl pointer-events-none transition-opacity ${
-            isCheckedOut
-              ? 'bg-indigo-500/10'
-              : isCheckedIn
-              ? 'bg-purple-500/15'
-              : 'bg-slate-200/20'
-          }`}
-        />
-
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition-shadow p-5 sm:p-6 flex flex-col justify-between">
         <div>
-          {/* Header Section */}
-          <div className="flex items-start justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3.5">
+          {/* Header */}
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3">
               <div
-                className={`w-13 h-13 rounded-2xl flex items-center justify-center shadow-xs transition-transform group-hover:scale-105 ${
+                className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
                   isCheckedOut
-                    ? 'bg-indigo-50 text-indigo-600 border border-indigo-200'
+                    ? 'bg-indigo-50 text-indigo-600'
                     : isCheckedIn
-                    ? 'bg-gradient-to-br from-indigo-100 to-purple-100 text-purple-700 border border-purple-200/60'
-                    : 'bg-slate-100 text-slate-400 border border-slate-200'
+                    ? 'bg-purple-50 text-purple-600'
+                    : 'bg-slate-100 text-slate-400'
                 }`}
               >
-                <Moon className="w-6 h-6" />
+                <Moon className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">Evening Office Departure</h3>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Record departure time & lock final daily work state</p>
+                <h3 className="text-base font-bold text-slate-900">Evening Check-Out</h3>
+                <p className="text-xs text-slate-500">Record your departure time</p>
               </div>
             </div>
 
             {isCheckedOut ? (
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80 shadow-2xs shrink-0">
-                <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" /> Checked Out
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
+                <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" />
+                Checked Out
               </span>
             ) : isCheckedIn ? (
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-purple-50 text-purple-800 border border-purple-200/80 shadow-2xs shrink-0">
-                <span className="w-2 h-2 rounded-full bg-purple-600 animate-ping" />
-                <Clock className="w-3.5 h-3.5 text-purple-600" /> Ready to Check-Out
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200/80">
+                <Clock className="w-3.5 h-3.5 text-purple-600" />
+                Ready to Check Out
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500 border border-slate-200 shrink-0">
-                <Lock className="w-3.5 h-3.5 text-slate-400" /> Locked
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">
+                <Lock className="w-3.5 h-3.5 text-slate-400" />
+                Locked
               </span>
             )}
           </div>
 
+          {/* Body Content */}
           {isCheckedOut ? (
-            <div className="space-y-3 mt-4">
-              <div className="p-4 bg-slate-50/80 rounded-2xl border border-slate-200/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-semibold text-xs">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs text-slate-500 font-medium block">Departure Timestamp</span>
-                    <span className="text-base font-extrabold text-slate-900 font-mono">
-                      {formatTime(summary?.eveningCheckOut)}
-                    </span>
-                  </div>
+            <div className="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
                 </div>
-                <span className="text-2xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100/70 px-2.5 py-1 rounded-lg">
-                  Finalized
-                </span>
-              </div>
-
-              <div className="p-4 bg-indigo-50/70 rounded-2xl border border-indigo-200/60 flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-semibold text-xs">
-                    <Clock className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <span className="text-xs text-indigo-900/70 font-medium block">Total Office Work Duration</span>
-                    <span className="text-xs font-extrabold text-indigo-950 font-mono">
-                      {summary?.officeDuration || '9h 00m'}
-                    </span>
-                  </div>
+                <div>
+                  <span className="text-xs text-slate-500 font-medium block">Departure Time</span>
+                  <span className="text-sm font-bold text-slate-900 font-mono">
+                    {formatTime(summary?.eveningCheckOut, false)}
+                  </span>
                 </div>
-                <span className="text-2xs font-bold text-indigo-800 bg-indigo-200/60 px-2.5 py-1 rounded-lg font-mono">
-                  Full Shift
-                </span>
               </div>
+              {summary?.officeDuration && (
+                <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200/60 px-2.5 py-1 rounded-lg">
+                  Duration: {summary.officeDuration}
+                </span>
+              )}
             </div>
           ) : isCheckedIn ? (
-            <div className="space-y-4">
-              <div className="p-4 bg-slate-50/90 rounded-2xl border border-slate-200/60 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-slate-700">
-                  <CheckCircle2 className="w-4 h-4 text-purple-600" />
-                  <span>End-of-Day Workflow</span>
-                </div>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  When ready to conclude your workday, click below to review your task progression, log completed objectives, and finalize departure.
-                </p>
-              </div>
+            <div className="mt-4 p-4 bg-purple-50/50 rounded-xl border border-purple-100 text-xs text-purple-900 leading-relaxed font-medium">
+              Ready to wrap up your workday? Click below to record your departure time and finalize today's attendance.
             </div>
           ) : (
-            <div className="pt-2">
-              <div className="p-4 bg-slate-50/90 rounded-2xl border border-slate-200/70 text-center space-y-2">
-                <div className="w-10 h-10 rounded-2xl bg-slate-200/60 text-slate-500 flex items-center justify-center mx-auto">
-                  <Lock className="w-5 h-5 text-slate-400" />
-                </div>
-                <p className="text-xs text-slate-600 font-semibold">
-                  Evening Check-Out is locked until Morning Check-In is performed.
-                </p>
-                <div className="flex items-center justify-center gap-1.5 text-2xs text-slate-400 font-medium">
-                  <ShieldAlert className="w-3.5 h-3.5" /> Follow the morning check-in card on the left
-                </div>
-              </div>
+            <div className="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 flex items-center gap-3 text-xs text-slate-500">
+              <Lock className="w-4 h-4 text-slate-400 shrink-0" />
+              <span>Evening Check-Out unlocks after morning check-in is completed.</span>
             </div>
           )}
         </div>
 
+        {/* Action Button if checked in and not checked out */}
         {isCheckedIn && !isCheckedOut && (
-          <div className="pt-5 mt-4 border-t border-slate-100">
+          <div className="pt-4 mt-4 border-t border-slate-100">
             <button
               onClick={() => setModalOpen(true)}
-              className="w-full py-3.5 px-5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800 hover:from-indigo-700 hover:to-purple-900 text-white font-bold text-sm rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2.5 active:translate-y-0"
+              className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:from-indigo-800 active:to-purple-800 text-white font-bold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
             >
-              <Moon className="w-4.5 h-4.5" />
+              <Moon className="w-4 h-4" />
               <span>Perform Evening Check-Out</span>
-              <ArrowRight className="w-4 h-4 text-indigo-200 ml-auto" />
+              <ArrowRight className="w-4 h-4 ml-1 opacity-80" />
             </button>
           </div>
         )}
@@ -180,4 +128,3 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
     </>
   );
 };
-

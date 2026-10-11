@@ -240,13 +240,23 @@ export const attendanceService = {
 
   getEmployeeDailyActivity: async (employeeId: number | string, dateStr?: string) => {
     const targetDate = dateStr || new Date().toISOString().slice(0, 10);
-    const res = await api.get<ApiResponse<any>>(`/admin/attendance/employee/${employeeId}`, {
+    try {
+      const res = await api.get<ApiResponse<any>>(`/admin/attendance/employee/${employeeId}`, {
+        params: { date: targetDate },
+      });
+      if (res.data?.success && res.data?.data) {
+        return res.data.data;
+      }
+    } catch {
+      // Fallback to /hr endpoint
+    }
+    const resHr = await api.get<ApiResponse<any>>(`/hr/attendance/employee/${employeeId}`, {
       params: { date: targetDate },
     });
-    if (!res.data.success || !res.data.data) {
-      throw new Error(res.data.message || 'Failed to load daily activity');
+    if (!resHr.data?.success || !resHr.data?.data) {
+      throw new Error(resHr.data?.message || 'Failed to load daily activity');
     }
-    return res.data.data;
+    return resHr.data.data;
   },
 
   reopenAttendanceDay: async (attendanceId: number): Promise<AttendanceRecord> => {
