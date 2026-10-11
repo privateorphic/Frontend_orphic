@@ -11,8 +11,17 @@ const extractArray = (data: any): Employee[] => {
 export const employeeService = {
   // Admin
   getAllEmployees: async (): Promise<Employee[]> => {
-    const res = await api.get<ApiResponse<any>>('/admin/employees');
-    return extractArray(res.data.data);
+    try {
+      const res = await api.get<ApiResponse<any>>('/admin/employees');
+      return extractArray(res.data.data);
+    } catch {
+      try {
+        const res = await api.get<ApiResponse<any>>('/hr/employees');
+        return extractArray(res.data.data);
+      } catch {
+        return [];
+      }
+    }
   },
 
   getEmployeeById: async (id: number): Promise<Employee> => {

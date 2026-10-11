@@ -31,22 +31,41 @@ export const taskService = {
   },
 
   getTaskById: async (id: number): Promise<Task> => {
-    const res = await api.get<ApiResponse<Task>>(`/admin/tasks/${id}`);
-    return res.data.data!;
+    try {
+      const res = await api.get<ApiResponse<Task>>(`/admin/tasks/${id}`);
+      return res.data.data!;
+    } catch {
+      const res = await api.get<ApiResponse<Task>>(`/hr/tasks/${id}`);
+      return res.data.data!;
+    }
   },
 
   createTask: async (data: TaskRequest): Promise<Task> => {
-    const res = await api.post<ApiResponse<Task>>('/admin/tasks', data);
-    return res.data.data!;
+    try {
+      const res = await api.post<ApiResponse<Task>>('/admin/tasks', data);
+      return res.data.data!;
+    } catch {
+      const res = await api.post<ApiResponse<Task>>('/hr/tasks', data);
+      return res.data.data!;
+    }
   },
 
   updateTask: async (id: number, data: TaskRequest): Promise<Task> => {
-    const res = await api.put<ApiResponse<Task>>(`/admin/tasks/${id}`, data);
-    return res.data.data!;
+    try {
+      const res = await api.put<ApiResponse<Task>>(`/admin/tasks/${id}`, data);
+      return res.data.data!;
+    } catch {
+      const res = await api.put<ApiResponse<Task>>(`/hr/tasks/${id}`, data);
+      return res.data.data!;
+    }
   },
 
   deleteTask: async (id: number): Promise<void> => {
-    await api.delete(`/admin/tasks/${id}`);
+    try {
+      await api.delete(`/admin/tasks/${id}`);
+    } catch {
+      await api.delete(`/hr/tasks/${id}`);
+    }
   },
 
   exportTasksExcel: async (params?: {
@@ -57,10 +76,18 @@ export const taskService = {
     status?: TaskStatus;
     priority?: TaskPriority;
   }): Promise<{ blob: Blob; filename: string }> => {
-    const res = await api.get('/admin/tasks/export', {
-      params,
-      responseType: 'blob',
-    });
+    let res;
+    try {
+      res = await api.get('/admin/tasks/export', {
+        params,
+        responseType: 'blob',
+      });
+    } catch {
+      res = await api.get('/hr/tasks/export', {
+        params,
+        responseType: 'blob',
+      });
+    }
     
     let filename = 'Employee_Work_Report.xlsx';
     const disposition = res.headers['content-disposition'];
