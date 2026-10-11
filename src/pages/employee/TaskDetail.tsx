@@ -73,9 +73,17 @@ export default function EmployeeTaskDetailPage() {
   const isCheckedIn = attendanceSummary?.status === 'CHECKED_IN' || attendanceSummary?.status === 'REOPENED';
   const isCheckedOut = attendanceSummary?.status === 'CHECKED_OUT';
 
-  // Task belongs to today if start date or completion date matches today
+  // Task completed on previous day check: prevents previous day tasks from being modified or re-added at checkout
+  const isCompletedPreviousDay = Boolean(
+    task?.status === 'COMPLETED' && (
+      (task.completedAt && !task.completedAt.startsWith(todayStr)) ||
+      (!task.completedAt && task.updatedAt && !task.updatedAt.startsWith(todayStr))
+    )
+  );
+
+  // Task belongs to today if start date or creation date matches today
   const isTodayTask = task ? (task.startDate === todayStr || (!task.startDate && task.createdAt?.startsWith(todayStr))) : true;
-  const isLockedForUpdate = isTodayTask && (isCheckedOut || !isCheckedIn);
+  const isLockedForUpdate = isCompletedPreviousDay || (isTodayTask && (isCheckedOut || !isCheckedIn));
 
   const handleSaveUpdate = async () => {
     if (!task) return;
@@ -190,12 +198,12 @@ export default function EmployeeTaskDetailPage() {
           </div>
 
           {/* Current Progress & Work Updates Box */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-md space-y-5">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F3DCCB] shadow-sm space-y-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-800 flex items-center gap-2">
-                <BarChart2 className="w-4 h-4 text-indigo-600" /> Current Work Progress
+              <h3 className="text-sm font-extrabold uppercase tracking-wider text-[#1F1410] flex items-center gap-2">
+                <BarChart2 className="w-4 h-4 text-[#EF7D35]" /> Current Work Progress
               </h3>
-              <span className="text-base font-black text-indigo-600 font-mono">
+              <span className="text-base font-black text-[#EF7D35] font-mono">
                 {task.progressPercentage}% Completed
               </span>
             </div>
@@ -224,21 +232,37 @@ export default function EmployeeTaskDetailPage() {
           </div>
 
           {/* Work Update & Status Control Panel */}
-          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-md space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#F3DCCB] shadow-sm space-y-6">
+            <div className="flex items-center justify-between border-b border-[#F3DCCB]/60 pb-4">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-[#1F1410] flex items-center gap-2">
                   Work Progress & Note Entry
                 </h3>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Update task status, move percentage slider, or append work notes</p>
+                <p className="text-xs text-[#78655A] font-medium mt-0.5">Update task status, move percentage slider, or append work notes</p>
               </div>
             </div>
 
-            {/* Attendance Check-in/Out Lock Alert */}
-            {isLockedForUpdate && (
-              <div className="p-4 bg-amber-500/10 border border-amber-300 rounded-2xl flex items-center justify-between gap-3 text-amber-900 shadow-2xs">
+            {/* Previous Day Completed Task Lock Notice */}
+            {isCompletedPreviousDay ? (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center justify-between gap-3 text-amber-950 shadow-xs">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-600 border border-amber-400/30 flex items-center justify-center shrink-0 font-bold">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-[#EF7D35] border border-amber-400/30 flex items-center justify-center shrink-0 font-bold">
+                    <Lock className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <strong className="block text-xs font-black uppercase tracking-wider text-amber-950">
+                      Task Completed on Previous Day (Locked)
+                    </strong>
+                    <span className="text-2xs text-amber-800 font-medium">
+                      This task was already completed on {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'a previous shift'}. It cannot be re-opened, modified, or re-added into today's checkout logs.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : isLockedForUpdate && (
+              <div className="p-4 bg-orange-500/10 border border-orange-300 rounded-2xl flex items-center justify-between gap-3 text-orange-950 shadow-xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-orange-500/20 text-[#EF7D35] border border-orange-400/30 flex items-center justify-center shrink-0 font-bold">
                     <Lock className="w-5 h-5" />
                   </div>
                   <div>
@@ -256,7 +280,7 @@ export default function EmployeeTaskDetailPage() {
                   <button
                     type="button"
                     onClick={() => navigate('/employee/office-attendance')}
-                    className="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs rounded-xl transition-all shrink-0 shadow-xs"
+                    className="px-3.5 py-2 bg-[#EF7D35] hover:bg-[#DC6422] text-white font-bold text-xs rounded-xl transition-all shrink-0 shadow-xs"
                   >
                     Check In Now
                   </button>
@@ -287,7 +311,7 @@ export default function EmployeeTaskDetailPage() {
                         ? s === 'COMPLETED'
                           ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
                           : s === 'IN_PROGRESS'
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+                          ? 'bg-[#EF7D35] text-white border-[#EF7D35] shadow-md'
                           : 'bg-slate-800 text-white border-slate-800 shadow-md'
                         : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                     } ${isLockedForUpdate ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -307,7 +331,7 @@ export default function EmployeeTaskDetailPage() {
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
                   Completion Percentage
                 </label>
-                <span className="text-sm font-extrabold font-mono text-indigo-600">
+                <span className="text-sm font-extrabold font-mono text-[#EF7D35]">
                   {form.progressPercentage ?? task.progressPercentage}%
                 </span>
               </div>
@@ -318,7 +342,7 @@ export default function EmployeeTaskDetailPage() {
                 step={5}
                 value={form.progressPercentage ?? task.progressPercentage}
                 onChange={(e) => setForm((p) => ({ ...p, progressPercentage: Number(e.target.value) }))}
-                className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-2.5 bg-[#FFF4EC] rounded-lg appearance-none cursor-pointer accent-[#EF7D35] disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={form.status === 'COMPLETED' || isLockedForUpdate}
               />
               <div className="flex justify-between text-2xs font-bold text-slate-400 font-mono mt-1">
@@ -335,9 +359,9 @@ export default function EmployeeTaskDetailPage() {
                 value={workNoteInput}
                 disabled={isLockedForUpdate}
                 onChange={(e) => setWorkNoteInput(e.target.value)}
-                placeholder={isLockedForUpdate ? "Task updates are locked until you check in for today's shift." : "Describe your progress today, obstacles faced, or deliverables finished..."}
+                placeholder={isLockedForUpdate ? "Task updates are locked." : "Describe your progress today, obstacles faced, or deliverables finished..."}
                 rows={3}
-                className="w-full p-4 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-xs font-medium resize-none disabled:opacity-50 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                className="w-full p-4 rounded-2xl border border-[#FBCBA8] bg-[#FFF4EC]/40 focus:outline-none focus:ring-2 focus:ring-[#EF7D35] focus:border-[#EF7D35] text-xs font-medium resize-none disabled:opacity-50 disabled:bg-slate-100 disabled:cursor-not-allowed"
               />
             </div>
 
@@ -345,7 +369,7 @@ export default function EmployeeTaskDetailPage() {
             <button
               onClick={handleSaveUpdate}
               disabled={saving || isLockedForUpdate}
-              className="w-full py-3.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-900 hover:from-indigo-700 hover:to-black text-white font-extrabold text-xs rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#EF7D35] via-[#DC6422] to-[#B84E1A] hover:from-[#DC6422] hover:to-[#7C2D12] text-white font-extrabold text-xs rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2.5 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {saving ? (
                 <>
@@ -393,15 +417,15 @@ export default function EmployeeTaskDetailPage() {
         {/* Right Column: Employee Total Task Summary Counter */}
         <div className="space-y-6">
           {/* Employee Total Tasks Summary Card */}
-          <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl border border-slate-800 space-y-5 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="bg-gradient-to-br from-[#7C2D12] via-[#B84E1A] to-[#DC6422] rounded-3xl p-6 text-white shadow-xl border border-[#F3DCCB]/30 space-y-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-2xs font-bold text-amber-400 uppercase tracking-wider block">Employee Work Overview</span>
+                <span className="text-2xs font-bold text-orange-200 uppercase tracking-wider block">Employee Work Overview</span>
                 <h3 className="text-lg font-black tracking-tight text-white mt-0.5">Total Tasks Metrics</h3>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-400/30 flex items-center justify-center font-bold text-xs">
+              <div className="w-10 h-10 rounded-xl bg-white/20 text-white border border-white/30 flex items-center justify-center font-bold text-xs">
                 <ListTodo className="w-5 h-5" />
               </div>
             </div>
@@ -409,35 +433,35 @@ export default function EmployeeTaskDetailPage() {
             {/* Metrics Breakdown Grid */}
             <div className="grid grid-cols-2 gap-3 pt-2">
               <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 text-center">
-                <span className="text-2xs text-slate-300 font-medium block">Total Tasks</span>
+                <span className="text-2xs text-orange-100 font-medium block">Total Tasks</span>
                 <span className="text-2xl font-black text-white font-mono">{totalCount}</span>
               </div>
 
-              <div className="bg-emerald-500/20 backdrop-blur-md p-3.5 rounded-2xl border border-emerald-400/30 text-center">
-                <span className="text-2xs text-emerald-300 font-medium block">Completed</span>
-                <span className="text-2xl font-black text-emerald-300 font-mono">{completedCount}</span>
+              <div className="bg-emerald-500/30 backdrop-blur-md p-3.5 rounded-2xl border border-emerald-300/40 text-center">
+                <span className="text-2xs text-emerald-100 font-medium block">Completed</span>
+                <span className="text-2xl font-black text-white font-mono">{completedCount}</span>
               </div>
 
-              <div className="bg-indigo-500/20 backdrop-blur-md p-3.5 rounded-2xl border border-indigo-400/30 text-center">
-                <span className="text-2xs text-indigo-300 font-medium block">In Progress</span>
-                <span className="text-2xl font-black text-indigo-300 font-mono">{inProgressCount}</span>
+              <div className="bg-amber-500/30 backdrop-blur-md p-3.5 rounded-2xl border border-amber-300/40 text-center">
+                <span className="text-2xs text-amber-100 font-medium block">In Progress</span>
+                <span className="text-2xl font-black text-white font-mono">{inProgressCount}</span>
               </div>
 
-              <div className="bg-slate-500/20 backdrop-blur-md p-3.5 rounded-2xl border border-slate-400/30 text-center">
-                <span className="text-2xs text-slate-300 font-medium block">To Do</span>
-                <span className="text-2xl font-black text-slate-200 font-mono">{todoCount}</span>
+              <div className="bg-black/20 backdrop-blur-md p-3.5 rounded-2xl border border-white/10 text-center">
+                <span className="text-2xs text-orange-200 font-medium block">To Do</span>
+                <span className="text-2xl font-black text-white font-mono">{todoCount}</span>
               </div>
             </div>
 
             {/* Overall Completion Rate Gauge */}
-            <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10 space-y-2">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-2xl border border-white/15 space-y-2">
               <div className="flex items-center justify-between text-xs font-bold">
-                <span className="text-slate-300">Overall Completion Rate</span>
-                <span className="text-amber-400 font-mono">{completionRate}%</span>
+                <span className="text-orange-100">Overall Completion Rate</span>
+                <span className="text-white font-mono">{completionRate}%</span>
               </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
+              <div className="w-full bg-black/20 h-2 rounded-full overflow-hidden">
                 <div
-                  className="bg-gradient-to-r from-amber-400 to-emerald-400 h-full transition-all duration-500 rounded-full"
+                  className="bg-white h-full transition-all duration-500 rounded-full"
                   style={{ width: `${completionRate}%` }}
                 />
               </div>
@@ -446,17 +470,17 @@ export default function EmployeeTaskDetailPage() {
             {/* Add Task Quick Trigger Button */}
             <button
               onClick={() => setIsCreateModalOpen(true)}
-              className="w-full py-3.5 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 active:scale-98"
+              className="w-full py-3.5 bg-white hover:bg-orange-50 text-[#7C2D12] font-black text-xs rounded-2xl shadow-md transition-all flex items-center justify-center gap-2.5 active:scale-98"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-4 h-4 text-[#EF7D35]" />
               <span>+ Add More Task (Self-Assigned)</span>
             </button>
           </div>
 
           {/* Other Employee Tasks Navigation List */}
-          <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-md space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-[#F3DCCB] shadow-sm space-y-4">
             <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-              <ListTodo className="w-4 h-4 text-indigo-600" /> Other Assigned Tasks ({allMyTasks.length})
+              <ListTodo className="w-4 h-4 text-[#EF7D35]" /> Other Assigned Tasks ({allMyTasks.length})
             </h4>
 
             <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
@@ -466,10 +490,10 @@ export default function EmployeeTaskDetailPage() {
                   <div
                     key={otherTask.id}
                     onClick={() => navigate(`/employee/tasks/${otherTask.id}`)}
-                    className="p-3 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-200/60 cursor-pointer transition-colors flex items-center justify-between gap-3 group"
+                    className="p-3 bg-slate-50 hover:bg-[#FFF4EC] rounded-2xl border border-slate-200/60 hover:border-[#FBCBA8] cursor-pointer transition-colors flex items-center justify-between gap-3 group"
                   >
                     <div className="min-w-0 flex-1">
-                      <h5 className="text-xs font-bold text-slate-800 truncate group-hover:text-indigo-600 transition-colors">
+                      <h5 className="text-xs font-bold text-slate-800 truncate group-hover:text-[#EF7D35] transition-colors">
                         {otherTask.title}
                       </h5>
                       <span className="text-2xs text-slate-500 font-mono">#{otherTask.id} • {otherTask.progressPercentage}% done</span>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Users, UserCheck, LogIn, Activity, CheckSquare, Clock,
   AlertTriangle, TrendingUp, Loader2, Calendar, Target,
@@ -10,7 +11,8 @@ import {
   AreaChart, Area
 } from 'recharts';
 import { dashboardService } from '../../services/reportService.ts';
-import type { AdminDashboard } from '../../types/index.ts';
+import { taskService } from '../../services/taskService.ts';
+import type { AdminDashboard, Task } from '../../types/index.ts';
 import ErrorState from '../../components/common/ErrorState.tsx';
 
 const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
@@ -42,6 +44,7 @@ type Timeframe = 'daily' | 'weekly' | 'monthly';
 
 export default function AdminDashboardPage() {
   const [data, setData] = useState<AdminDashboard | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeframe, setTimeframe] = useState<Timeframe>('weekly');
@@ -56,6 +59,13 @@ export default function AdminDashboardPage() {
       setError('Unable to load dashboard. Please try again.');
     } finally {
       setLoading(false);
+    }
+
+    try {
+      const taskList = await taskService.getAllTasks();
+      setTasks(taskList);
+    } catch {
+      setTasks([]);
     }
   };
 
@@ -318,13 +328,91 @@ export default function AdminDashboardPage() {
                 <XAxis type="number" tick={{ fontSize: 11 }} />
                 <YAxis dataKey="name" type="category" width={100} tick={{ fontSize: 11 }} />
                 <Tooltip />
-                <Bar dataKey="value" name="Employees" fill="#8b5cf6" radius={[0, 4, 4, 0]} />
+                <Bar dataKey="value" name="Employees" fill="#EF7D35" radius={[0, 4, 4, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
             <div className="h-[230px] flex items-center justify-center text-slate-400 text-sm">No department data available</div>
           )}
         </div>
+      </div>
+
+      {/* Admin Company Completed Tasks Table */}
+      <div className="card p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="p-2 rounded-xl bg-[#FFF4EC] text-[#EF7D35]">
+                <CheckSquare className="w-5 h-5" />
+              </span>
+              <h2 className="text-base font-bold text-slate-900">Finished & Completed Company Tasks</h2>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">
+              Showing company-wide completed tasks and deliverables recorded across all departments
+            </p>
+          </div>
+          <Link
+            to="/admin/tasks"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#EF7D35] hover:bg-[#DC6422] text-white text-xs font-bold rounded-xl shadow-xs transition"
+          >
+            <span>Manage All Tasks</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {tasks.filter((t) => t.status === 'COMPLETED').length > 0 ? (
+          <div className="overflow-x-auto rounded-xl border border-slate-200/70">
+            <table className="w-full text-left text-xs text-slate-600">
+              <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200/70">
+                <tr>
+                  <th className="p-3">Task Title</th>
+                  <th className="p-3">Assigned Employee</th>
+                  <th className="p-3">Department</th>
+                  <th className="p-3">Completed On</th>
+                  <th className="p-3">Priority</th>
+                  <th className="p-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {tasks
+                  .filter((t) => t.status === 'COMPLETED')
+                  .slice(0, 8)
+                  .map((task) => (
+                    <tr key={task.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-3 font-semibold text-slate-900">{task.title}</td>
+                      <td className="p-3 text-slate-700 font-medium">{task.assignedToName || 'Unassigned'}</td>
+                      <td className="p-3 text-slate-600">{task.departmentName || 'General'}</td>
+                      <td className="p-3 font-mono text-slate-600">
+                        {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Today'}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-0.5 rounded-md font-bold text-2xs ${
+                            task.priority === 'HIGH' || task.priority === 'URGENT'
+                              ? 'bg-rose-100 text-rose-800'
+                              : task.priority === 'MEDIUM'
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          {task.priority || 'NORMAL'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right">
+                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-lg inline-flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Completed
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="p-8 text-center bg-slate-50/60 border border-dashed border-slate-200 rounded-xl text-slate-500 text-xs">
+            No completed tasks found in current period.
+          </div>
+        )}
       </div>
     </div>
   );

@@ -49,21 +49,21 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-fade-in">
       <div className="bg-white rounded-3xl max-w-lg w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all">
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-purple-950 text-white p-6 sm:p-7 relative overflow-hidden">
-          <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="bg-gradient-to-r from-[#7C2D12] via-[#94401A] to-[#EF7D35] text-white p-6 sm:p-7 relative overflow-hidden">
+          <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <button
             onClick={onClose}
-            className="absolute top-5 right-5 text-slate-400 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/10"
+            className="absolute top-5 right-5 text-orange-200 hover:text-white transition-colors p-1.5 rounded-xl hover:bg-white/10"
           >
             <X className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-4">
-            <div className="w-13 h-13 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-400/30 flex items-center justify-center shadow-inner">
+            <div className="w-13 h-13 rounded-2xl bg-white/20 text-white border border-white/30 flex items-center justify-center shadow-inner">
               <Moon className="w-6.5 h-6.5" />
             </div>
             <div>
               <h3 className="text-xl font-extrabold tracking-tight">Evening Check-Out</h3>
-              <p className="text-xs text-indigo-200/80 font-medium mt-0.5">Confirm departure & finalize today's work snapshot</p>
+              <p className="text-xs text-orange-100 font-medium mt-0.5">Confirm departure & finalize today's work snapshot</p>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
         <div className="p-6 sm:p-7 space-y-5">
           <div className="bg-slate-50/80 rounded-2xl p-4.5 border border-slate-200/70 space-y-3">
             <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-indigo-600" /> Today's Work Summary
+              <Clock className="w-3.5 h-3.5 text-[#EF7D35]" /> Today's Work Summary
             </h4>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="bg-white p-3.5 rounded-xl border border-slate-200/60 shadow-2xs">
@@ -81,26 +81,26 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
               </div>
               <div className="bg-white p-3.5 rounded-xl border border-slate-200/60 shadow-2xs">
                 <span className="text-xs text-slate-500 font-medium block">Current Time</span>
-                <span className="font-extrabold text-indigo-600 font-mono text-base">{formatTime(new Date())}</span>
+                <span className="font-extrabold text-[#EF7D35] font-mono text-base">{formatTime(new Date())}</span>
               </div>
             </div>
           </div>
 
           {/* Task Metrics Grid */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="p-3.5 bg-blue-50/70 border border-blue-100 rounded-2xl text-center">
-              <ListTodo className="w-4 h-4 text-blue-600 mx-auto mb-1" />
-              <span className="text-2xs text-blue-800 font-bold block">Morning</span>
-              <span className="text-xl font-black text-blue-900">{summary?.morningTaskCount ?? 0}</span>
+            <div className="p-3.5 bg-[#FFF4EC] border border-[#FBCBA8] rounded-2xl text-center">
+              <ListTodo className="w-4 h-4 text-[#EF7D35] mx-auto mb-1" />
+              <span className="text-2xs text-[#7C2D12] font-bold block">Morning</span>
+              <span className="text-xl font-black text-[#7C2D12]">{summary?.morningTaskCount ?? 0}</span>
             </div>
 
-            <div className="p-3.5 bg-purple-50/70 border border-purple-100 rounded-2xl text-center">
-              <PlusCircle className="w-4 h-4 text-purple-600 mx-auto mb-1" />
-              <span className="text-2xs text-purple-800 font-bold block">Added</span>
-              <span className="text-xl font-black text-purple-900">+{summary?.tasksAdded ?? 0}</span>
+            <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-2xl text-center">
+              <PlusCircle className="w-4 h-4 text-amber-600 mx-auto mb-1" />
+              <span className="text-2xs text-amber-800 font-bold block">Added</span>
+              <span className="text-xl font-black text-amber-900">+{summary?.tasksAdded ?? 0}</span>
             </div>
 
-            <div className="p-3.5 bg-emerald-50/70 border border-emerald-100 rounded-2xl text-center">
+            <div className="p-3.5 bg-emerald-50/80 border border-emerald-200 rounded-2xl text-center">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 mx-auto mb-1" />
               <span className="text-2xs text-emerald-800 font-bold block">Completed</span>
               <span className="text-xl font-black text-emerald-900">{summary?.completedTaskCount ?? 0}</span>
@@ -110,7 +110,7 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
           <div className="p-4 bg-amber-50/90 rounded-2xl border border-amber-200/80 text-xs text-amber-900 flex items-start gap-3">
             <AlertCircle className="w-4.5 h-4.5 text-amber-600 shrink-0 mt-0.5" />
             <span className="leading-relaxed font-medium">
-              Performing Evening Check-Out will lock your final task snapshot and calculate total office working duration for management review.
+              Performing Evening Check-Out locks your final task snapshot for today. Tasks completed on previous shifts are excluded from this report.
             </span>
           </div>
         </div>
@@ -128,7 +128,7 @@ export const CheckoutConfirmationModal: React.FC<Props> = ({
           <button
             onClick={handleConfirmCheckout}
             disabled={submitting}
-            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-900 hover:from-indigo-700 hover:to-black text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-50"
+            className="px-5 py-2.5 bg-gradient-to-r from-[#EF7D35] via-[#DC6422] to-[#B84E1A] hover:from-[#DC6422] hover:to-[#7C2D12] text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 disabled:opacity-50"
           >
             {submitting ? (
               <>

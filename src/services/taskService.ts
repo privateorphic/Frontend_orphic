@@ -17,8 +17,17 @@ export const taskService = {
     departmentId?: number;
     keyword?: string;
   }): Promise<Task[]> => {
-    const res = await api.get<ApiResponse<any>>('/admin/tasks', { params });
-    return extractArray(res.data.data);
+    try {
+      const res = await api.get<ApiResponse<any>>('/admin/tasks', { params });
+      return extractArray(res.data.data);
+    } catch {
+      try {
+        const res = await api.get<ApiResponse<any>>('/hr/tasks', { params });
+        return extractArray(res.data.data);
+      } catch {
+        return [];
+      }
+    }
   },
 
   getTaskById: async (id: number): Promise<Task> => {

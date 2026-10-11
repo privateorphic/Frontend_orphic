@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Users, Calendar, Clock, FileText,
-  Bell, LogOut, Menu, X, ChevronDown, UserCheck, User
+  Bell, LogOut, Menu, X, ChevronDown, UserCheck, User, CheckSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.tsx';
 import { notificationService } from '../services/notificationService.ts';
@@ -13,6 +13,7 @@ const logoImg = '/orphicsolution_logo.jpg';
 const navItems = [
   { to: '/hr/dashboard',       icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/hr/employees',       icon: Users,            label: 'Employees' },
+  { to: '/hr/tasks',           icon: CheckSquare,      label: 'Tasks & Projects' },
   { to: '/hr/attendance',      icon: UserCheck,        label: 'Attendance' },
   { to: '/hr/login-activity',  icon: Clock,            label: 'Login Activity' },
   { to: '/hr/leaves',          icon: Calendar,         label: 'Leave Management' },

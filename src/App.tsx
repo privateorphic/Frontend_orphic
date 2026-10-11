@@ -112,6 +112,7 @@ export default function App() {
             <Route path="/hr/employees" element={<HrEmployeesPage />} />
             <Route path="/hr/employees/create" element={<HrCreateEmployeePage />} />
             <Route path="/hr/employees/:id" element={<AdminEmployeeDetailPage />} />
+            <Route path="/hr/tasks" element={<AdminTasksPage />} />
             <Route path="/hr/attendance" element={<HrAttendancePage />} />
             <Route path="/hr/login-activity" element={<AdminLoginActivityPage />} />
             <Route path="/hr/leaves" element={<HrLeavesPage />} />

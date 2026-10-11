@@ -40,9 +40,9 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
               <div
                 className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
                   isCheckedOut
-                    ? 'bg-indigo-50 text-indigo-600'
+                    ? 'bg-[#FFF4EC] text-[#EF7D35]'
                     : isCheckedIn
-                    ? 'bg-purple-50 text-purple-600'
+                    ? 'bg-[#FFF4EC] text-[#EF7D35]'
                     : 'bg-slate-100 text-slate-400'
                 }`}
               >
@@ -55,13 +55,13 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
             </div>
 
             {isCheckedOut ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/80">
-                <CheckCircle2 className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 Checked Out
               </span>
             ) : isCheckedIn ? (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200/80">
-                <Clock className="w-3.5 h-3.5 text-purple-600" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FFF4EC] text-[#DC6422] border border-[#FBCBA8]">
+                <Clock className="w-3.5 h-3.5 text-[#EF7D35]" />
                 Ready to Check Out
               </span>
             ) : (
@@ -76,7 +76,7 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
           {isCheckedOut ? (
             <div className="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-[#FFF4EC] text-[#EF7D35] flex items-center justify-center">
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
@@ -87,14 +87,14 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
                 </div>
               </div>
               {summary?.officeDuration && (
-                <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200/60 px-2.5 py-1 rounded-lg">
+                <span className="text-xs font-semibold text-[#B84E1A] bg-[#FFF4EC] border border-[#FBCBA8] px-2.5 py-1 rounded-lg">
                   Duration: {summary.officeDuration}
                 </span>
               )}
             </div>
           ) : isCheckedIn ? (
-            <div className="mt-4 p-4 bg-purple-50/50 rounded-xl border border-purple-100 text-xs text-purple-900 leading-relaxed font-medium">
-              Ready to wrap up your workday? Click below to record your departure time and finalize today's attendance.
+            <div className="mt-4 p-4 bg-[#FFF4EC]/60 rounded-xl border border-[#FBCBA8]/80 text-xs text-[#7C2D12] leading-relaxed font-medium">
+              Ready to wrap up your workday? Click below to record your departure time and finalize today's attendance and completed task snapshot.
             </div>
           ) : (
             <div className="mt-4 p-4 bg-slate-50/80 rounded-xl border border-slate-200/60 flex items-center gap-3 text-xs text-slate-500">
@@ -109,7 +109,7 @@ export const EveningCheckoutCard: React.FC<Props> = ({ summary, onAttendanceUpda
           <div className="pt-4 mt-4 border-t border-slate-100">
             <button
               onClick={() => setModalOpen(true)}
-              className="w-full py-3 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 active:from-indigo-800 active:to-purple-800 text-white font-bold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-gradient-to-r from-[#EF7D35] to-[#DC6422] hover:from-[#DC6422] hover:to-[#B84E1A] text-white font-bold text-sm rounded-xl shadow-xs transition-all flex items-center justify-center gap-2"
             >
               <Moon className="w-4 h-4" />
               <span>Perform Evening Check-Out</span>

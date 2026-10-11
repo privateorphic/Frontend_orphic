@@ -1,7 +1,9 @@
 import { useEffect, useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Users, UserCheck, UserPlus, Calendar, LogIn, Clock, RefreshCw,
-  TrendingUp, BarChart3, PieChart as PieIcon, Activity, ChevronRight, Home, MapPin
+  TrendingUp, BarChart3, PieChart as PieIcon, Activity, ChevronRight, Home, MapPin,
+  CheckSquare, ListTodo, CheckCircle2
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -9,8 +11,9 @@ import {
 } from 'recharts';
 import { dashboardService } from '../../services/reportService';
 import { wfhService } from '../../services/wfhService';
+import { taskService } from '../../services/taskService';
 import { WfhLocationMapModal } from '../../components/wfh/WfhLocationMapModal';
-import type { HrDashboard, WfhActiveEmployee } from '../../types';
+import type { HrDashboard, WfhActiveEmployee, Task } from '../../types';
 import ErrorState from '../../components/common/ErrorState';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
@@ -32,6 +35,7 @@ export default function HrDashboardPage() {
   const [wfhEmployees, setWfhEmployees] = useState<any[]>([]);
   const [selectedWfhEmp, setSelectedWfhEmp] = useState<any | null>(null);
   const [mapOpen, setMapOpen] = useState(false);
+  const [companyTasks, setCompanyTasks] = useState<Task[]>([]);
 
   const fetchDashboard = async () => {
     setLoading(true);
@@ -83,11 +87,33 @@ export default function HrDashboardPage() {
     } catch {
       setWfhEmployees([]);
     }
+
+    try {
+      const allTasks = await taskService.getAllTasks();
+      setCompanyTasks(allTasks);
+    } catch {
+      setCompanyTasks([]);
+    }
   };
 
   useEffect(() => {
     fetchDashboard();
   }, []);
+
+  const taskStats = useMemo(() => {
+    const total = companyTasks.length;
+    const completed = companyTasks.filter((t) => t.status === 'COMPLETED');
+    const inProgress = companyTasks.filter((t) => t.status === 'IN_PROGRESS');
+    const todo = companyTasks.filter((t) => t.status === 'TODO');
+    const rate = total > 0 ? Math.round((completed.length / total) * 100) : 0;
+    return {
+      total,
+      completed,
+      inProgress,
+      todo,
+      rate,
+    };
+  }, [companyTasks]);
 
   // Prepare Department Distribution Data
   const deptData = useMemo(() => {
@@ -417,6 +443,115 @@ export default function HrDashboardPage() {
             No employees are currently active under Work From Home (WFH) mode today.
           </div>
         )}
+      </div>
+
+      {/* Company Task Completion & Oversight Section */}
+      <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="p-2 rounded-xl bg-[#FFF4EC] text-[#EF7D35]">
+                <CheckSquare className="w-5 h-5" />
+              </span>
+              <h2 className="text-lg font-bold text-slate-900">Company Task Completion & Oversight</h2>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">Live tracking of team tasks, finished deliverables, and completion rates</p>
+          </div>
+          <Link
+            to="/hr/tasks"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[#EF7D35] hover:bg-[#DC6422] text-white text-xs font-bold rounded-xl shadow-xs transition"
+          >
+            <span>Manage All Tasks</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Task Metrics Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/60">
+            <span className="text-xs font-semibold text-slate-500 block">Total Assigned Tasks</span>
+            <span className="text-2xl font-black text-slate-900 font-mono mt-1 block">{taskStats.total}</span>
+          </div>
+
+          <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200/60">
+            <span className="text-xs font-semibold text-emerald-700 block">Completed Deliverables</span>
+            <div className="flex items-baseline gap-2 mt-1">
+              <span className="text-2xl font-black text-emerald-800 font-mono">{taskStats.completed.length}</span>
+              <span className="text-xs text-emerald-600 font-bold">({taskStats.rate}% rate)</span>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl bg-[#FFF4EC] border border-[#FBCBA8]">
+            <span className="text-xs font-semibold text-[#B84E1A] block">Tasks In Progress</span>
+            <span className="text-2xl font-black text-[#EF7D35] font-mono mt-1 block">{taskStats.inProgress.length}</span>
+          </div>
+
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-200/60">
+            <span className="text-xs font-semibold text-amber-700 block">Pending / To Do</span>
+            <span className="text-2xl font-black text-amber-900 font-mono mt-1 block">{taskStats.todo.length}</span>
+          </div>
+        </div>
+
+        {/* Recently Completed Tasks Table */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Finished & Completed Tasks ({taskStats.completed.length})
+            </h3>
+            <span className="text-xs text-slate-500 font-medium">Updated in real-time</span>
+          </div>
+
+          {taskStats.completed.length > 0 ? (
+            <div className="overflow-x-auto rounded-xl border border-slate-200/70">
+              <table className="w-full text-left text-xs text-slate-600">
+                <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200/70">
+                  <tr>
+                    <th className="p-3">Task Title</th>
+                    <th className="p-3">Assigned Employee</th>
+                    <th className="p-3">Department</th>
+                    <th className="p-3">Completed On</th>
+                    <th className="p-3">Priority</th>
+                    <th className="p-3 text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {taskStats.completed.slice(0, 6).map((task) => (
+                    <tr key={task.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="p-3 font-semibold text-slate-900">{task.title}</td>
+                      <td className="p-3 text-slate-700 font-medium">{task.assignedToName || 'Unassigned'}</td>
+                      <td className="p-3 text-slate-600">{task.departmentName || 'General'}</td>
+                      <td className="p-3 font-mono text-slate-600">
+                        {task.completedAt ? new Date(task.completedAt).toLocaleDateString() : 'Today'}
+                      </td>
+                      <td className="p-3">
+                        <span
+                          className={`px-2 py-0.5 rounded-md font-bold text-2xs ${
+                            task.priority === 'HIGH' || task.priority === 'URGENT'
+                              ? 'bg-rose-100 text-rose-800'
+                              : task.priority === 'MEDIUM'
+                              ? 'bg-amber-100 text-amber-800'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          {task.priority || 'NORMAL'}
+                        </span>
+                      </td>
+                      <td className="p-3 text-right">
+                        <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 font-bold rounded-lg inline-flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Completed
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="p-6 text-center bg-slate-50/60 border border-dashed border-slate-200 rounded-xl text-slate-500 text-xs">
+              No tasks have been marked as completed yet.
+            </div>
+          )}
+        </div>
       </div>
 
       <WfhLocationMapModal
